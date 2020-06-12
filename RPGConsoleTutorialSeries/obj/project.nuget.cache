@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "h3MCAbWNSDsNcDLR0SFh+rKoOIg4t+/Lkh1bLNYkCjpR0DmifHG30+NjzwiNZvluc4ESR1VmspfhgQaEtXaTbA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\tvance\\source\\repos\\RPG-LearnCSharp\\RPGConsoleTutorialSeries\\RPGConsoleTutorialSeries.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\tvance\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
