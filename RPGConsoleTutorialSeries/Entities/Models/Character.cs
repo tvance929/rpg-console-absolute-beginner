@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Text;
+﻿using System.Collections.Generic;
 using RPGConsoleTutorialSeries.Items.Interfaces;
 
 namespace RPGConsoleTutorialSeries.Entities.Models
 {
-    public class Character
+    public class Character : Entity
     {
         public string Name;
         public int Level;
@@ -18,7 +15,7 @@ namespace RPGConsoleTutorialSeries.Entities.Models
         public bool IsAlive;
         public int ArmorClass;
         public List<IItem> Inventory;
-        public int HitPoints;
+        public CharacterClass Class;
     }
 
     public class Abilities
@@ -28,6 +25,14 @@ namespace RPGConsoleTutorialSeries.Entities.Models
         public int Constitution;
         public int Intelligence;
         public int Wisdom;
-        public int Charisma;
+        public int Charisma;        
+    }
+
+    public enum CharacterClass
+    {
+        Fighter,
+        Thief,
+        MagicUser,
+        Healer
     }
 }

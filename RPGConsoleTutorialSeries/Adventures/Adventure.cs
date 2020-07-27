@@ -1,24 +1,20 @@
-﻿namespace RPGConsoleTutorialSeries.Adventures
+﻿using System.Collections.Generic;
+using RPGConsoleTutorialSeries.Adventures.Models;
+
+namespace RPGConsoleTutorialSeries.Adventures
 {
     public class Adventure
     {
-        public string GUID { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public int CompletionXPReward { get; set; }
-        public int CompletionGoldReward { get; set; }
-        public int MaxLevel { get; set; }
-        public int MinimumLevel { get; set; }
+        public string GUID;
+        public string Title;
+        public string Description;
+        public int CompletionXPReward;
+        public int CompletionGoldReward;
+        public int MaxLevel;
+        public int MinimumLevel;
+        public List<Room> Rooms;
 
         public Adventure()
-        {
-
-        }
-
-        /// <summary>
-        /// This class does this and that and dont do this.
-        /// </summary>
-        public void myMethod()
         {
 
         }

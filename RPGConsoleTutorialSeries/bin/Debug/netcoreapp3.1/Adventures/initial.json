@@ -1,9 +1,55 @@
 {
   "GUID": "0C5558CA-9EEA-460E-82BD-D496C35E4B6F",
   "Title": "The Duke's Chalice.",
-  "Description": "This is the starter adventure, have fun.",
+  "Description": "You've made it!  Your first adventure...searching for the Duke's cup in a rundown monster infested ruin...YES!  \n You cannot believe you're really an adventurer now.  But will you survive?  As you survey this initial plain entryway you see...",
   "CompletionXPReward": 250,
   "CompletionGoldReward": 100,
   "MaxLevel": 1,
-  "MinimumLevel" :  1
+  "MinimumLevel": 1,
+  "Rooms": [
+    {
+      "RoomNumber": 1,
+      "Description": "You've made it! ENTRYWAY",
+      "Exits": [
+        {
+          "Locked": false,
+          "WallLocation": 0,
+          "LeadsToRoomNumber": 2
+        },
+        {
+          "Locked": false,
+          "WallLocation": 1,
+          "LeadsToRoomNumber": 3
+        }
+      ]
+    },
+    {
+      "RoomNumber": 2,
+      "Description": "Scary Room",
+      "Trap": {
+        "TrapType": 1
+      },
+      "Chest": {
+        "Gold" :  5
+      },
+      "Exits": [
+        {
+          "Locked": false,
+          "WallLocation": 2,
+          "LeadsToRoomNumber": 1
+        }
+      ]
+    },
+    {
+      "RoomNumber": 3,
+      "Description": "LONG HALLWAY",
+      "Exits": [
+        {
+          "Locked": false,
+          "WallLocation": 3,
+          "LeadsToRoomNumber": 1
+        }
+      ]
+    }
+  ]
 }
