@@ -1,0 +1,15 @@
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\bin\Release\netcoreapp3.1\RPGConsoleTutorialSeries.exe
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\bin\Release\netcoreapp3.1\RPGConsoleTutorialSeries.deps.json
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\bin\Release\netcoreapp3.1\RPGConsoleTutorialSeries.runtimeconfig.json
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\bin\Release\netcoreapp3.1\RPGConsoleTutorialSeries.runtimeconfig.dev.json
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\bin\Release\netcoreapp3.1\RPGConsoleTutorialSeries.dll
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\bin\Release\netcoreapp3.1\RPGConsoleTutorialSeries.pdb
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\bin\Release\netcoreapp3.1\Newtonsoft.Json.dll
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\obj\Release\netcoreapp3.1\RPGConsoleTutorialSeries.csprojAssemblyReference.cache
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\obj\Release\netcoreapp3.1\RPGConsoleTutorialSeries.csproj.CoreCompileInputs.cache
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\obj\Release\netcoreapp3.1\RPGConsoleTutorialSeries.AssemblyInfoInputs.cache
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\obj\Release\netcoreapp3.1\RPGConsoleTutorialSeries.AssemblyInfo.cs
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\obj\Release\netcoreapp3.1\RPGConsoleTutorialSeries.csproj.CopyComplete
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\obj\Release\netcoreapp3.1\RPGConsoleTutorialSeries.dll
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\obj\Release\netcoreapp3.1\RPGConsoleTutorialSeries.pdb
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\obj\Release\netcoreapp3.1\RPGConsoleTutorialSeries.genruntimeconfig.cache

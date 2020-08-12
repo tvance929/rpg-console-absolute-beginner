@@ -10,6 +10,9 @@
     {
       "RoomNumber": 1,
       "Description": "You've made it! ENTRYWAY",
+      "Trap": {
+        "TrapType": 1
+      },
       "Exits": [
         {
           "Locked": false,

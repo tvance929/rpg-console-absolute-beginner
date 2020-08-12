@@ -35,7 +35,6 @@ C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\bin\Debug\
 C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\bin\Debug\netcoreapp3.1\RPGConsoleTutorialSeries.dll
 C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\bin\Debug\netcoreapp3.1\RPGConsoleTutorialSeries.pdb
 C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
-C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\obj\Debug\netcoreapp3.1\RPGConsoleTutorialSeries.csprojAssemblyReference.cache
 C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\obj\Debug\netcoreapp3.1\RPGConsoleTutorialSeries.csproj.CoreCompileInputs.cache
 C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\obj\Debug\netcoreapp3.1\RPGConsoleTutorialSeries.AssemblyInfoInputs.cache
 C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\obj\Debug\netcoreapp3.1\RPGConsoleTutorialSeries.AssemblyInfo.cs
@@ -43,3 +42,4 @@ C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\obj\Debug\
 C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\obj\Debug\netcoreapp3.1\RPGConsoleTutorialSeries.dll
 C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\obj\Debug\netcoreapp3.1\RPGConsoleTutorialSeries.pdb
 C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\obj\Debug\netcoreapp3.1\RPGConsoleTutorialSeries.genruntimeconfig.cache
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\obj\Debug\netcoreapp3.1\RPGConsoleTutorialSeries.csprojAssemblyReference.cache
