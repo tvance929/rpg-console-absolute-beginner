@@ -1,7 +1,20 @@
-﻿namespace RPGConsoleTutorialSeries.Game
+﻿using System;
+using System.Collections.Generic;
+
+namespace RPGConsoleTutorialSeries.Game
 {
     public class Dice
     {
+        public int RollDice(List<Die> DiceToRoll)
+        {
+            var randomRoller = new Random();
+            var total = 0;
+            foreach(var die in DiceToRoll)
+            {
+                total += randomRoller.Next(1, (int)die);
+            }
+            return total;
+        }
     }
 
     public enum Die

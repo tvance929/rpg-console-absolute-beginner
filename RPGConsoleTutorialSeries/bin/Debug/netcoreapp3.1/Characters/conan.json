@@ -4,5 +4,14 @@
   "Gold": 2,
   "HitPoints": 4,
   "Class": 1,
-  "IsAlive" :  true
+  "IsAlive": true,
+  "Abilities": 
+  {
+    "Strength" : 1,
+    "Dexterity": 1,
+    "Constitution": 0,
+    "Intelligence": -1,
+    "Wisdom" : -1,
+    "Charisma" : 1
+  }
 }

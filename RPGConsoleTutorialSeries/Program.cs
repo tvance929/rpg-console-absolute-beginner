@@ -2,14 +2,17 @@
 using RPGConsoleTutorialSeries.Adventures;
 using RPGConsoleTutorialSeries.Entities;
 using RPGConsoleTutorialSeries.Game;
+using RPGConsoleTutorialSeries.Utilities;
 
 namespace RPGConsoleTutorialSeries
 {
     class Program
     {
-        private static AdventureService adventureService = new AdventureService();
-        private static CharacterService characterService = new CharacterService();
-        private static GameService gameService = new GameService(adventureService, characterService);
+        private static readonly AdventureService adventureService = new AdventureService();
+        private static readonly CharacterService characterService = new CharacterService();
+        private static readonly ConsoleMessageHandler consoleMessageHandler = new ConsoleMessageHandler();
+        private static GameService gameService = new GameService(adventureService, characterService, consoleMessageHandler);
+
         static void Main(string[] args)
         {
             MakeTitle();
@@ -32,31 +35,37 @@ namespace RPGConsoleTutorialSeries
 
         private static void MakeMainMenu()
         {
-            MakeMenuOptions();           
+            MakeMenuOptions();
             var inputValid = false;
-
-            while (!inputValid)
+            try
             {
-                switch (Console.ReadLine().ToUpper())
+                while (!inputValid)
                 {
-                    case "S":
-                        gameService.StartGame();
-                        inputValid = true;
-                        break;
-                    case "C":
-                        CreateCharacter();
-                        inputValid = true;
-                        break;
-                    case "L":
-                        LoadGame();
-                        inputValid = true;
-                        break;
-                    default:
-                        Console.WriteLine("\nUm.... you didnt pick the right letter!!??!?");
-                        MakeMenuOptions();
-                        inputValid = false;
-                        break;
-                }               
+                    switch (Console.ReadLine().ToUpper())
+                    {
+                        case "S":
+                            gameService.StartGame();
+                            inputValid = true;
+                            break;
+                        case "C":
+                            CreateCharacter();
+                            inputValid = true;
+                            break;
+                        case "L":
+                            LoadGame();
+                            inputValid = true;
+                            break;
+                        default:
+                            Console.WriteLine("\nUm.... you didnt pick the right letter!!??!?");
+                            MakeMenuOptions();
+                            inputValid = false;
+                            break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"KaBOOM!  Orcs did it again!  Something went wrong! {ex.Message}");
             }
         }
 
@@ -70,7 +79,7 @@ namespace RPGConsoleTutorialSeries
         private static void LoadGame()
         {
             Console.WriteLine("Load a game, great job!");
-        }       
+        }
 
         private static void CreateCharacter()
         {
