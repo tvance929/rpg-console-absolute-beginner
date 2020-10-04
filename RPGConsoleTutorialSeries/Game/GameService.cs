@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using RPGConsoleTutorialSeries.Adventures;
 using RPGConsoleTutorialSeries.Adventures.Interfaces;
 using RPGConsoleTutorialSeries.Adventures.Models;
@@ -17,6 +18,7 @@ namespace RPGConsoleTutorialSeries.Game
         private readonly IMessageHandler messageHandler;
 
         private Character character;
+        private Adventure gameAdventure;
 
         public GameService(IAdventureService AdventureService, ICharacterService CharacterService, IMessageHandler MessageHandler)
         {
@@ -27,16 +29,17 @@ namespace RPGConsoleTutorialSeries.Game
 
         public bool StartGame(Adventure adventure = null)
         {
-            if (adventure == null)
+            gameAdventure = adventure;
+            if (gameAdventure == null)
             {
-                adventure = adventureService.GetInitialAdventure();
+                gameAdventure = adventureService.GetInitialAdventure();
             }
 
-            CreateTitleBanner(adventure.Title);
+            CreateTitleBanner(gameAdventure.Title);
 
-            CreateDescriptionBanner(adventure);
+            CreateDescriptionBanner(gameAdventure);
 
-            var charactersInRange = characterService.GetCharactersInRange(adventure.MinimumLevel, adventure.MaxLevel);
+            var charactersInRange = characterService.GetCharactersInRange(gameAdventure.MinimumLevel, gameAdventure.MaxLevel);
 
             if (charactersInRange.Count == 0)
             {
@@ -55,7 +58,7 @@ namespace RPGConsoleTutorialSeries.Game
             }
             character = characterService.LoadCharacter(charactersInRange[Convert.ToInt32(messageHandler.Read())].Name);
 
-            var rooms = adventure.Rooms;
+            var rooms = gameAdventure.Rooms;
             RoomProcessor(rooms[0]);
 
             return true;
@@ -104,7 +107,6 @@ namespace RPGConsoleTutorialSeries.Game
         {
             RoomDescription(room);
             RoomOptions(room);
-
         }
 
         private void RoomDescription(Room room)
@@ -137,33 +139,24 @@ namespace RPGConsoleTutorialSeries.Game
 
         private void RoomOptions(Room room)
         {
-            messageHandler.Write("WHAT WOULD YOU LIKE TO DO!?");
-            messageHandler.Write("----------------------------");
-            messageHandler.Write("L)ook for traps");
-            messageHandler.Write("Use an Exit:");
-            foreach (var exit in room.Exits)
-            {
-                messageHandler.Write($"({exit.WallLocation.ToString().Substring(0, 1)}){exit.WallLocation.ToString().Substring(1)}");
-            }
-            if (room.Chest != null)
-            {
-                messageHandler.Write("O)pen the chest");
-                messageHandler.Write("C)heck chest for traps");
-            }
+            WriteRoomOptions(room);
 
             var playerDecision = messageHandler.Read().ToLower();
             var exitRoom = false;
 
-            while(exitRoom == false)
+            while (exitRoom == false)
             {
                 switch (playerDecision)
                 {
                     case "l":
                     case "c":
                         CheckForTraps(room);
+                        WriteRoomOptions(room);
+                        playerDecision = messageHandler.Read().ToLower();
                         break;
-                    case "o" : 
-                        if (room.Chest != null) {
+                    case "o":
+                        if (room.Chest != null)
+                        {
                             OpenChest(room.Chest);
                         }
                         else
@@ -175,9 +168,39 @@ namespace RPGConsoleTutorialSeries.Game
                     case "s":
                     case "e":
                     case "w":
-                        ExitRoom(room);
+                        var wallLocation = CompassDirection.North;
+                        if (playerDecision == "s") wallLocation = CompassDirection.South;
+                        else if (playerDecision == "w") wallLocation = CompassDirection.West;
+                        else if (playerDecision == "e") wallLocation = CompassDirection.East;
+
+                        if (room.Exits.FirstOrDefault(x => x.WallLocation == wallLocation) != null)
+                        {
+                            ExitRoom(room, wallLocation);
+                        }
+                        else
+                        {
+                            Console.WriteLine("\n Um... that's a wall friend....\n");
+                        }
+
                         break;
                 }
+            }
+        }
+
+        private void WriteRoomOptions(Room room)
+        {
+            messageHandler.Write("WHAT WOULD YOU LIKE TO DO!?");
+            messageHandler.Write("----------------------------");
+            messageHandler.Write("L)ook for traps");
+            if (room.Chest != null)
+            {
+                messageHandler.Write("O)pen the chest");
+                messageHandler.Write("C)heck chest for traps");
+            }
+            messageHandler.Write("Use an Exit:");
+            foreach (var exit in room.Exits)
+            {
+                messageHandler.Write($"({exit.WallLocation.ToString().Substring(0, 1)}){exit.WallLocation.ToString().Substring(1)}");
             }
         }
 
@@ -214,11 +237,11 @@ namespace RPGConsoleTutorialSeries.Game
                 }
 
                 messageHandler.Write("You've found a trap! And are forced to try and disarm...");
-                var disarmTrapRoll = dice.RollDice(new List<Die>{ Die.D20 }) + trapBonus;
-                
+                var disarmTrapRoll = dice.RollDice(new List<Die> { Die.D20 }) + trapBonus;
+
                 if (disarmTrapRoll < 11)
                 {
-                    messageHandler.Write("KABOOM!  You did not disarm the trap you take 4 damage!");                    
+                    ProcessTrapMessagesAndDamage(room);
                 }
                 else
                 {
@@ -231,14 +254,48 @@ namespace RPGConsoleTutorialSeries.Game
             return;
         }
 
+        private void ProcessTrapMessagesAndDamage(Room room)
+        {
+            var dice = new Dice();
+
+            messageHandler.Write($"CLANK!  A sound of metal falls into place... you TRIPPED a {room.Trap.TrapType.ToString()} trap!");
+            var trapDamage = dice.RollDice(new List<Die>() { room.Trap.DamageDie });
+            var hitPoints = character.Hitpoints - trapDamage;
+            messageHandler.Write($"YOU WERE DAMAGED FOR {trapDamage} HIT POINTS!  You now have {hitPoints} hit pointss!");
+            if (hitPoints < 1)
+            {
+                messageHandler.Write("AND......you're dead.");
+            }
+        }
+
         private void OpenChest(Chest chest)
         {
             throw new NotImplementedException();
         }
 
-        private void ExitRoom(Room room)
+        private void ExitRoom(Room room, CompassDirection wallLocation)
         {
-            throw new NotImplementedException();
+            if (room.Trap != null && room.Trap.TrippedOrDisarmed == false)
+            {
+                ProcessTrapMessagesAndDamage(room);
+                //IF NOT DEAD - keep going.
+            }
+
+            var exit = room.Exits.FirstOrDefault(x => x.WallLocation == wallLocation);
+
+            if (exit == null)
+            {
+                throw new Exception("this room doesnt have that exception");
+            }
+
+            var newRoom = gameAdventure.Rooms.FirstOrDefault(x => x.RoomNumber == exit.LeadsToRoomNumber);
+
+            if (newRoom == null)
+            {
+                throw new Exception("The room that this previous room was supposed to lead too does not exist!?  Dragons?  Or maybe a bad author!!!");
+            }
+
+            RoomProcessor(newRoom);
         }
     }
 }

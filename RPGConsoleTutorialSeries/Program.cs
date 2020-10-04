@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Media;
 using RPGConsoleTutorialSeries.Adventures;
 using RPGConsoleTutorialSeries.Entities;
 using RPGConsoleTutorialSeries.Game;
@@ -16,7 +17,12 @@ namespace RPGConsoleTutorialSeries
         static void Main(string[] args)
         {
             MakeTitle();
-            MakeMainMenu();
+            using (SoundPlayer player = new SoundPlayer($"{AppDomain.CurrentDomain.BaseDirectory}/sounds/shortIntro.wav"))
+            {
+                player.Play();
+                MakeMainMenu(player);
+            }
+                
         }
 
         private static void MakeTitle()
@@ -33,7 +39,7 @@ namespace RPGConsoleTutorialSeries
             Console.WriteLine("***************************************************\n\n");
         }
 
-        private static void MakeMainMenu()
+        private static void MakeMainMenu(SoundPlayer player)
         {
             MakeMenuOptions();
             var inputValid = false;
@@ -44,6 +50,7 @@ namespace RPGConsoleTutorialSeries
                     switch (Console.ReadLine().ToUpper())
                     {
                         case "S":
+                            player.Stop();
                             gameService.StartGame();
                             inputValid = true;
                             break;

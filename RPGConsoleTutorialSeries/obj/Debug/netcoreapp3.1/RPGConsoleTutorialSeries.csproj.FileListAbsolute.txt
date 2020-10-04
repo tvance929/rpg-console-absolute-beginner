@@ -35,7 +35,6 @@ C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\bin\Debug\
 C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\bin\Debug\netcoreapp3.1\RPGConsoleTutorialSeries.dll
 C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\bin\Debug\netcoreapp3.1\RPGConsoleTutorialSeries.pdb
 C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
-C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\obj\Debug\netcoreapp3.1\RPGConsoleTutorialSeries.csproj.CoreCompileInputs.cache
 C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\obj\Debug\netcoreapp3.1\RPGConsoleTutorialSeries.AssemblyInfoInputs.cache
 C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\obj\Debug\netcoreapp3.1\RPGConsoleTutorialSeries.AssemblyInfo.cs
 C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\obj\Debug\netcoreapp3.1\RPGConsoleTutorialSeries.csproj.CopyComplete
@@ -43,3 +42,11 @@ C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\obj\Debug\
 C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\obj\Debug\netcoreapp3.1\RPGConsoleTutorialSeries.pdb
 C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\obj\Debug\netcoreapp3.1\RPGConsoleTutorialSeries.genruntimeconfig.cache
 C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\obj\Debug\netcoreapp3.1\RPGConsoleTutorialSeries.csprojAssemblyReference.cache
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\bin\Debug\netcoreapp3.1\Microsoft.Win32.SystemEvents.dll
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\bin\Debug\netcoreapp3.1\System.Drawing.Common.dll
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\bin\Debug\netcoreapp3.1\System.Windows.Extensions.dll
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RPGConsoleTutorialSeries\obj\Debug\netcoreapp3.1\RPGConsoleTutorialSeries.csproj.CoreCompileInputs.cache
