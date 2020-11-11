@@ -1,0 +1,24 @@
+THINGS LEFT TO DO:
+Open chest, check traps in chests 
+
+Riddles - Locked Doors
+
+Final Objective for adventure - Make GUID feature so player cant play same adventure twice
+==============================
+
+THINGS DONE:
+Fix traps message that is passed over when exiting room
+
+Make CLONE of adventurer and only overwrite orginal if they finish adventures
+=================================
+
+NICE TO HAVES:
+Make a character info sheet
+
+Create Character!
+
+LOAD a game, do we want this?  Lots of info to save - 
+
+Is death permanent? - List of the Dead with stats?
+
+CryptoCurrency?

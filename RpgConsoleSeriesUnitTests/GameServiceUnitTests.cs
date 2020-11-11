@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using Moq;
+using Newtonsoft.Json.Serialization;
 using RPGConsoleTutorialSeries.Adventures;
 using RPGConsoleTutorialSeries.Adventures.Interfaces;
 using RPGConsoleTutorialSeries.Adventures.Models;
 using RPGConsoleTutorialSeries.Entities.Interfaces;
 using RPGConsoleTutorialSeries.Entities.Models;
 using RPGConsoleTutorialSeries.Game;
+using RPGConsoleTutorialSeries.Game.Interfaces;
 using RPGConsoleTutorialSeries.Utilities.Interfaces;
 using Shouldly;
 using Xunit;
@@ -20,10 +22,12 @@ namespace RpgConsoleSeriesUnitTests
         private Mock<IAdventureService> mockAdventureService = new Mock<IAdventureService>();
         private Mock<ICharacterService> mockCharacterService = new Mock<ICharacterService>();
         private Mock<IMessageHandler> mockMessageHandler = new Mock<IMessageHandler>();
+        private Mock<ITrapService> mockTrapService = new Mock<ITrapService>();
 
         public GameServiceUnitTests()
         {
-            gameService = new GameService(mockAdventureService.Object, mockCharacterService.Object, mockMessageHandler.Object);
+            gameService = new GameService(mockAdventureService.Object, 
+                mockCharacterService.Object, mockMessageHandler.Object, mockTrapService.Object);
         }
 
         [Fact]

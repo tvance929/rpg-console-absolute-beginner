@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using RPGConsoleTutorialSeries.Adventures;
 using RPGConsoleTutorialSeries.Adventures.Interfaces;
 using RPGConsoleTutorialSeries.Adventures.Models;
 using RPGConsoleTutorialSeries.Entities.Interfaces;
 using RPGConsoleTutorialSeries.Entities.Models;
 using RPGConsoleTutorialSeries.Game.Interfaces;
+using RPGConsoleTutorialSeries.Items.Models;
 using RPGConsoleTutorialSeries.Utilities.Interfaces;
 
 namespace RPGConsoleTutorialSeries.Game
@@ -16,15 +19,20 @@ namespace RPGConsoleTutorialSeries.Game
         private readonly IAdventureService adventureService;
         private readonly ICharacterService characterService;
         private readonly IMessageHandler messageHandler;
+        private readonly ITrapService trapService;
 
         private Character character;
         private Adventure gameAdventure;
 
-        public GameService(IAdventureService AdventureService, ICharacterService CharacterService, IMessageHandler MessageHandler)
+        public GameService(IAdventureService AdventureService, 
+            ICharacterService CharacterService, 
+            IMessageHandler MessageHandler,
+            ITrapService TrapService)
         {
             adventureService = AdventureService;
             characterService = CharacterService;
             messageHandler = MessageHandler;
+            trapService = TrapService;
         }
 
         public bool StartGame(Adventure adventure = null)
@@ -150,6 +158,16 @@ namespace RPGConsoleTutorialSeries.Game
                 {
                     case "l":
                     case "c":
+                        var foundTrap = trapService.CheckForTraps(room.Trap, character);
+                        room.Trap.SearchedFor = true;
+                        if (foundTrap)
+                        {
+                            messageHandler.Write("You've found a trap! And are forced to try and disarm...");
+                            //Make Disarm Option
+                            var disarmedTrap = 
+                            messageHandler.Write("SHEW!!!  You disarmed the trap!");
+                        }
+
                         CheckForTraps(room);
                         WriteRoomOptions(room);
                         playerDecision = messageHandler.Read().ToLower();
@@ -158,6 +176,8 @@ namespace RPGConsoleTutorialSeries.Game
                         if (room.Chest != null)
                         {
                             OpenChest(room.Chest);
+                            WriteRoomOptions(room);
+                            playerDecision = messageHandler.Read().ToLower();
                         }
                         else
                         {
@@ -241,7 +261,7 @@ namespace RPGConsoleTutorialSeries.Game
 
                 if (disarmTrapRoll < 11)
                 {
-                    ProcessTrapMessagesAndDamage(room);
+                    ProcessTrapMessagesAndDamage(room.Trap);
                 }
                 else
                 {
@@ -254,30 +274,84 @@ namespace RPGConsoleTutorialSeries.Game
             return;
         }
 
-        private void ProcessTrapMessagesAndDamage(Room room)
+        private void ProcessTrapMessagesAndDamage(Trap trap)
         {
             var dice = new Dice();
 
-            messageHandler.Write($"CLANK!  A sound of metal falls into place... you TRIPPED a {room.Trap.TrapType.ToString()} trap!");
-            var trapDamage = dice.RollDice(new List<Die>() { room.Trap.DamageDie });
+            messageHandler.Write($"CLANK!  A sound of metal falls into place... you TRIPPED a {trap.TrapType} trap!");
+            var trapDamage = dice.RollDice(new List<Die>() { trap.DamageDie });
             var hitPoints = character.Hitpoints - trapDamage;
             messageHandler.Write($"YOU WERE DAMAGED FOR {trapDamage} HIT POINTS!  You now have {hitPoints} hit pointss!");
             if (hitPoints < 1)
             {
                 messageHandler.Write("AND......you're dead.");
+                //IMPLEMENT END OF GAME DEATH HERE
             }
+            messageHandler.Read();
         }
 
         private void OpenChest(Chest chest)
         {
-            throw new NotImplementedException();
+            if (!chest.Locked)
+            {
+                if (chest.Trap != null)
+                {
+                    if (!chest.Trap.TrippedOrDisarmed)
+                    {
+                        ProcessTrapMessagesAndDamage(chest.Trap);
+                    }
+                }
+                else
+                {
+                    if (chest.Gold > 0)
+                    {
+                        character.Gold += chest.Gold;
+                        chest.Gold = 0;
+                        messageHandler.Write($"Woot! You find {chest.Gold} gold! Your total gold is now {character.Gold}");
+                    }
+
+                    if (chest.Treasure != null)
+                    {
+                        messageHandler.Write($"You find {chest.Treasure.Count} items in this chest!  And they are:");
+
+                        if (character.Inventory == null)
+                        {
+                            character.Inventory = new List<Items.Interfaces.IItem>();
+                        }
+
+                        foreach (var item in chest.Treasure)
+                        {
+                            messageHandler.Write(item.Name.ToString());
+                        }
+                        character.Inventory.AddRange(chest.Treasure);
+                        chest.Treasure = new List<Item>();
+                    }
+
+                    if (chest.Gold > 0 && chest.Treasure != null)
+                    {
+                        messageHandler.Write("you find NOTHING in this stinking dirty chest!!!");
+                    }
+                }
+            }
+            else
+            {
+                messageHandler.Write("The chest is locked!  Would you like to attempt to unlock it? Y or N");
+                var playerDecision = messageHandler.Read().ToLower();
+                switch (playerDecision)
+                {
+                    case "y":
+                        throw new NotImplementedException("We havent implemented unlocking Chests");
+                    default:
+                        return;
+                }
+            }
         }
 
         private void ExitRoom(Room room, CompassDirection wallLocation)
         {
             if (room.Trap != null && room.Trap.TrippedOrDisarmed == false)
             {
-                ProcessTrapMessagesAndDamage(room);
+                ProcessTrapMessagesAndDamage(room.Trap);
                 //IF NOT DEAD - keep going.
             }
 
