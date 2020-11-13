@@ -19,20 +19,15 @@ namespace RPGConsoleTutorialSeries.Game
         private readonly IAdventureService adventureService;
         private readonly ICharacterService characterService;
         private readonly IMessageHandler messageHandler;
-        private readonly ITrapService trapService;
 
         private Character character;
         private Adventure gameAdventure;
 
-        public GameService(IAdventureService AdventureService, 
-            ICharacterService CharacterService, 
-            IMessageHandler MessageHandler,
-            ITrapService TrapService)
+        public GameService(IAdventureService AdventureService, ICharacterService CharacterService, IMessageHandler MessageHandler)
         {
             adventureService = AdventureService;
             characterService = CharacterService;
             messageHandler = MessageHandler;
-            trapService = TrapService;
         }
 
         public bool StartGame(Adventure adventure = null)
@@ -158,16 +153,6 @@ namespace RPGConsoleTutorialSeries.Game
                 {
                     case "l":
                     case "c":
-                        var foundTrap = trapService.CheckForTraps(room.Trap, character);
-                        room.Trap.SearchedFor = true;
-                        if (foundTrap)
-                        {
-                            messageHandler.Write("You've found a trap! And are forced to try and disarm...");
-                            //Make Disarm Option
-                            var disarmedTrap = 
-                            messageHandler.Write("SHEW!!!  You disarmed the trap!");
-                        }
-
                         CheckForTraps(room);
                         WriteRoomOptions(room);
                         playerDecision = messageHandler.Read().ToLower();
@@ -292,22 +277,19 @@ namespace RPGConsoleTutorialSeries.Game
 
         private void OpenChest(Chest chest)
         {
-            if (!chest.Locked)
+            if (!chest.Lock.Locked)
             {
-                if (chest.Trap != null)
+                if (chest.Trap != null && !chest.Trap.TrippedOrDisarmed)
                 {
-                    if (!chest.Trap.TrippedOrDisarmed)
-                    {
-                        ProcessTrapMessagesAndDamage(chest.Trap);
-                    }
+                    ProcessTrapMessagesAndDamage(chest.Trap);
                 }
                 else
                 {
                     if (chest.Gold > 0)
                     {
-                        character.Gold += chest.Gold;
+                        character.Gold += chest.Gold;                        
+                        messageHandler.Write($"Woot! You find {chest.Gold} gold! Your total gold is now {character.Gold}\n");
                         chest.Gold = 0;
-                        messageHandler.Write($"Woot! You find {chest.Gold} gold! Your total gold is now {character.Gold}");
                     }
 
                     if (chest.Treasure != null)
@@ -316,13 +298,15 @@ namespace RPGConsoleTutorialSeries.Game
 
                         if (character.Inventory == null)
                         {
-                            character.Inventory = new List<Items.Interfaces.IItem>();
+                            character.Inventory = new List<Item>();
                         }
 
                         foreach (var item in chest.Treasure)
                         {
                             messageHandler.Write(item.Name.ToString());
                         }
+                        messageHandler.Write("\n");
+
                         character.Inventory.AddRange(chest.Treasure);
                         chest.Treasure = new List<Item>();
                     }
@@ -335,14 +319,29 @@ namespace RPGConsoleTutorialSeries.Game
             }
             else
             {
-                messageHandler.Write("The chest is locked!  Would you like to attempt to unlock it? Y or N");
-                var playerDecision = messageHandler.Read().ToLower();
-                switch (playerDecision)
+                if (!chest.Lock.Attempted)
                 {
-                    case "y":
-                        throw new NotImplementedException("We havent implemented unlocking Chests");
-                    default:
-                        return;
+                    messageHandler.Write("The chest is locked!  Would you like to attempt to unlock it? Y or N");
+                    var playerDecision = messageHandler.Read().ToLower();
+                    switch (playerDecision)
+                    {
+                        case "y":
+
+                            throw new NotImplementedException("We havent implemented unlocking Chests");
+                        default:
+                            return;
+                    }
+                }
+                else
+                {
+                    if (character.Inventory.FirstOrDefault(x => x.Name == ItemType.Key && x.ObjectiveNumber == chest.Lock.KeyNumber) != null)
+                    {
+                        messageHandler.Write("You have the right key!  It unlocks the chest!");
+                    }
+                    else
+                    {
+                        messageHandler.Write("You do not have the key to unlock this door and bashing or picking is beyond your skill!");
+                    }                            
                 }
             }
         }
@@ -370,6 +369,11 @@ namespace RPGConsoleTutorialSeries.Game
             }
 
             RoomProcessor(newRoom);
+        }
+
+        private bool Picklock(Character character)
+        {
+            return false;
         }
     }
 }

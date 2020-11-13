@@ -12,8 +12,7 @@ namespace RPGConsoleTutorialSeries
         private static readonly AdventureService adventureService = new AdventureService();
         private static readonly CharacterService characterService = new CharacterService();
         private static readonly ConsoleMessageHandler consoleMessageHandler = new ConsoleMessageHandler();
-        private static readonly TrapService trapService = new TrapService(consoleMessageHandler);
-        private static GameService gameService = new GameService(adventureService, characterService, consoleMessageHandler, trapService);
+        private static GameService gameService = new GameService(adventureService, characterService, consoleMessageHandler);
 
         static void Main(string[] args)
         {

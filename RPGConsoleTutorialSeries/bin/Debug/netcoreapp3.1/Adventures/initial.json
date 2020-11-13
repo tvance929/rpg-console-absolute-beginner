@@ -13,14 +13,22 @@
       "Trap": {
         "TrapType": 1
       },
+      "Chest": {
+        "Treasure": [
+          {
+            "Name": "key",
+            "Description": "ugly brown key",
+            "ObjectiveNumber": 2,
+            "GoldValue": 0
+          }
+        ]
+      },
       "Exits": [
         {
-          "Locked": false,
           "WallLocation": 0,
           "LeadsToRoomNumber": 2
         },
         {
-          "Locked": false,
           "WallLocation": 1,
           "LeadsToRoomNumber": 3
         }
@@ -33,11 +41,30 @@
         "TrapType": 1
       },
       "Chest": {
-        "Gold" :  5
+        "Lock": {
+          "Locked": true,
+          "KeyNumber" :  22
+        },
+        "Gold": 5,
+        "Treasure": [
+          {
+            "Name": "Rope",
+            "Description": "Rope that looks fancy",
+            "ObjectiveNumber": 0,
+            "Weight": 1,
+            "GoldValue": 0
+          },
+          {
+            "Name": "HolySymbol",
+            "Description": "This is the Duke's chalice!",
+            "ObjectiveNumber": 123,
+            "Weight": 2,
+            "GoldValue": 50
+          }
+        ]
       },
       "Exits": [
         {
-          "Locked": false,
           "WallLocation": 2,
           "LeadsToRoomNumber": 1
         }
@@ -48,11 +75,56 @@
       "Description": "LONG HALLWAY",
       "Exits": [
         {
-          "Locked": false,
           "WallLocation": 3,
           "LeadsToRoomNumber": 1
+        },
+        {
+          "Lock": {
+            "Locked": true,
+            "KeyNumber" :  2
+          },
+          "WallLocation": 1,
+          "LeadsToRoomNumber": 4
         }
       ]
+    },
+    {
+      "RoomNumber": 4,
+      "Description": "This room looks like an old dust closet, there is an old chest in the corner and tattered garments scattered about.",
+      "Exits": [
+        {
+          "WallLocation": 3,
+          "LeadsToRoomNumber": 3
+        }
+      ],
+      "Chest": {
+        "Trap": {
+          "TrapType": 1
+        },
+        "Treasure": [
+          {
+            "Name": "Food",
+            "Description": "Maggoty bread",
+            "ObjectiveNumber": 0,
+            "Weight": 0,
+            "GoldValue": 0
+          },
+          {
+            "Name": "Key",
+            "Description": "Rusty looking key",
+            "ObjectiveNumber": 22,
+            "Weight": 0,
+            "GoldValue": 0
+          }
+        ],
+        "Exits": [
+          {
+            "Locked": false,
+            "WallLocation": 2,
+            "LeadsToRoomNumber": 1
+          }
+        ]
+      }
     }
   ]
 }

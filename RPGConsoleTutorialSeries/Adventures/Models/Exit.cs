@@ -2,7 +2,7 @@
 {
     public class Exit
     {
-        public bool Locked = false;
+        public Lock Lock;
         public CompassDirection WallLocation;
         public Riddle Riddle;
         public int LeadsToRoomNumber;

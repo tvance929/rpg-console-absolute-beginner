@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using RPGConsoleTutorialSeries.Items.Interfaces;
+using RPGConsoleTutorialSeries.Items.Models;
 
 namespace RPGConsoleTutorialSeries.Entities.Models
 {
@@ -14,7 +14,7 @@ namespace RPGConsoleTutorialSeries.Entities.Models
         public List<string> AdventuresPlayed;
         public bool IsAlive;
         public int ArmorClass;
-        public List<IItem> Inventory;
+        public List<Item> Inventory;
         public CharacterClass Class;
     }
 

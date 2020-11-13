@@ -5,7 +5,7 @@ namespace RPGConsoleTutorialSeries.Adventures.Models
 {
     public class Chest
     {
-        public bool Locked = false;
+        public Lock Lock;
         public Trap Trap;
         public List<Item> Treasure;
         public int Gold;

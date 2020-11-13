@@ -22,12 +22,10 @@ namespace RpgConsoleSeriesUnitTests
         private Mock<IAdventureService> mockAdventureService = new Mock<IAdventureService>();
         private Mock<ICharacterService> mockCharacterService = new Mock<ICharacterService>();
         private Mock<IMessageHandler> mockMessageHandler = new Mock<IMessageHandler>();
-        private Mock<ITrapService> mockTrapService = new Mock<ITrapService>();
 
         public GameServiceUnitTests()
         {
-            gameService = new GameService(mockAdventureService.Object, 
-                mockCharacterService.Object, mockMessageHandler.Object, mockTrapService.Object);
+            gameService = new GameService(mockAdventureService.Object, mockCharacterService.Object, mockMessageHandler.Object);
         }
 
         [Fact]

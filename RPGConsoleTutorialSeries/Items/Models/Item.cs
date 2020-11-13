@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using RPGConsoleTutorialSeries.Items.Interfaces;
+﻿using RPGConsoleTutorialSeries.Items.Interfaces;
 
 namespace RPGConsoleTutorialSeries.Items.Models
 {
@@ -21,6 +18,8 @@ namespace RPGConsoleTutorialSeries.Items.Models
         HolySymbol,
         Water,
         Food,
-        Tinderbox
+        Tinderbox,
+        Key,
+        Lockpicks
     }
 }
