@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using RPGConsoleTutorialSeries.Adventures;
 using RPGConsoleTutorialSeries.Adventures.Interfaces;
 using RPGConsoleTutorialSeries.Adventures.Models;
@@ -263,9 +261,10 @@ namespace RPGConsoleTutorialSeries.Game
         {
             var dice = new Dice();
 
-            messageHandler.Write($"CLANK!  A sound of metal falls into place... you TRIPPED a {trap.TrapType} trap!");
+            messageHandler.Write($"CLANK! A sound of metal falls into place... you TRIPPED a {trap.TrapType} trap!");
             var trapDamage = dice.RollDice(new List<Die>() { trap.DamageDie });
-            var hitPoints = character.Hitpoints - trapDamage;
+            character.Hitpoints -= trapDamage;
+            var hitPoints = character.Hitpoints;
             messageHandler.Write($"YOU WERE DAMAGED FOR {trapDamage} HIT POINTS!  You now have {hitPoints} hit pointss!");
             if (hitPoints < 1)
             {
@@ -277,29 +276,26 @@ namespace RPGConsoleTutorialSeries.Game
 
         private void OpenChest(Chest chest)
         {
-            if (!chest.Lock.Locked)
+            if (chest.Lock == null || !chest.Lock.Locked)
             {
                 if (chest.Trap != null && !chest.Trap.TrippedOrDisarmed)
                 {
                     ProcessTrapMessagesAndDamage(chest.Trap);
+                    chest.Trap.TrippedOrDisarmed = true;
                 }
                 else
                 {
+                    messageHandler.Write("You open the chest..");
                     if (chest.Gold > 0)
                     {
-                        character.Gold += chest.Gold;                        
+                        character.Gold += chest.Gold;
                         messageHandler.Write($"Woot! You find {chest.Gold} gold! Your total gold is now {character.Gold}\n");
                         chest.Gold = 0;
                     }
 
-                    if (chest.Treasure != null)
+                    if (chest.Treasure != null && chest.Treasure.Count > 0)
                     {
                         messageHandler.Write($"You find {chest.Treasure.Count} items in this chest!  And they are:");
-
-                        if (character.Inventory == null)
-                        {
-                            character.Inventory = new List<Item>();
-                        }
 
                         foreach (var item in chest.Treasure)
                         {
@@ -309,39 +305,20 @@ namespace RPGConsoleTutorialSeries.Game
 
                         character.Inventory.AddRange(chest.Treasure);
                         chest.Treasure = new List<Item>();
+                        return;
                     }
 
-                    if (chest.Gold > 0 && chest.Treasure != null)
+                    if (chest.Gold == 0 && (chest.Treasure == null || chest.Treasure.Count == 0))
                     {
-                        messageHandler.Write("you find NOTHING in this stinking dirty chest!!!");
+                        messageHandler.Write("The chest is empty... \n");
                     }
                 }
             }
             else
             {
-                if (!chest.Lock.Attempted)
+                if (TryUnlock(chest.Lock))
                 {
-                    messageHandler.Write("The chest is locked!  Would you like to attempt to unlock it? Y or N");
-                    var playerDecision = messageHandler.Read().ToLower();
-                    switch (playerDecision)
-                    {
-                        case "y":
-
-                            throw new NotImplementedException("We havent implemented unlocking Chests");
-                        default:
-                            return;
-                    }
-                }
-                else
-                {
-                    if (character.Inventory.FirstOrDefault(x => x.Name == ItemType.Key && x.ObjectiveNumber == chest.Lock.KeyNumber) != null)
-                    {
-                        messageHandler.Write("You have the right key!  It unlocks the chest!");
-                    }
-                    else
-                    {
-                        messageHandler.Write("You do not have the key to unlock this door and bashing or picking is beyond your skill!");
-                    }                            
+                    OpenChest(chest);
                 }
             }
         }
@@ -351,6 +328,7 @@ namespace RPGConsoleTutorialSeries.Game
             if (room.Trap != null && room.Trap.TrippedOrDisarmed == false)
             {
                 ProcessTrapMessagesAndDamage(room.Trap);
+                room.Trap.TrippedOrDisarmed = true;
                 //IF NOT DEAD - keep going.
             }
 
@@ -368,11 +346,110 @@ namespace RPGConsoleTutorialSeries.Game
                 throw new Exception("The room that this previous room was supposed to lead too does not exist!?  Dragons?  Or maybe a bad author!!!");
             }
 
-            RoomProcessor(newRoom);
+            if ((exit.Lock == null || !exit.Lock.Locked) || TryUnlock(exit.Lock))
+            {
+                RoomProcessor(newRoom);
+            }
+            else
+            {
+                RoomProcessor(room);
+            }
         }
 
-        private bool Picklock(Character character)
+        private bool TryUnlock(Lock theLock)
         {
+            if (!theLock.Locked) return true;
+
+            var hasOptions = true;
+            var dice = new Dice();
+           
+            while (hasOptions)
+            {
+                if (!theLock.Attempted)
+                {
+                    messageHandler.Write("Locked!  Would you like to attempt to unlock it? \n" +
+                        "K)ey L)ockpick B)ash or W)alk away");
+                    var playerDecision = messageHandler.Read().ToLower();
+                    switch (playerDecision)
+                    {
+                        case "k":
+                            if (character.Inventory.FirstOrDefault(x => x.Name == ItemType.Key && x.ObjectiveNumber == theLock.KeyNumber) != null)
+                            {
+                                messageHandler.WriteRead("You have the right key!  It unlocks the lock! \n");
+                                theLock.Locked = false;
+                                return true;
+                            }
+                            else
+                            {
+                                messageHandler.Write("You do not have a key for this chest \n");
+                                break;
+                            }
+                        case "l":
+                            if (character.Inventory.FirstOrDefault(x => x.Name == ItemType.Lockpicks) == null)
+                            {
+                                messageHandler.Write("You don't have lockpicks! \n");
+                                break;
+                            }
+                            else
+                            {
+                                var lockpickBonus = 0 + character.Abilities.Dexterity;
+                                if (character.Class == CharacterClass.Thief)
+                                {
+                                    lockpickBonus += 2;
+                                }
+                                var pickRoll = (dice.RollDice(new List<Die> { Die.D20 }) + lockpickBonus);
+                                if (pickRoll > 12)
+                                {
+                                    messageHandler.WriteRead($"Youe dextrous hands click that lock open! \n" +
+                                    $"Your lockpick roll was {pickRoll} and you needed 12! \n");
+                                    theLock.Locked = false;
+                                    theLock.Attempted = true;
+                                    return true;
+                                }
+                                messageHandler.WriteRead($"Snap! The lock doesnt budge! \n" +
+                                $"Your lockpick roll was {pickRoll} and you needed 12! \n");
+                                theLock.Attempted = true;
+                                break;
+                            }
+                        case "b":
+                            var bashBonus = 0 + character.Abilities.Strength;
+                            if (character.Class == CharacterClass.Fighter)
+                            {
+                                bashBonus += 2;
+                            }
+                            var bashRoll = (dice.RollDice(new List<Die> { Die.D20 }) + bashBonus);
+                            if (bashRoll > 16)
+                            {
+                                messageHandler.WriteRead($"You muster your strength and BASH that silly lock into submission! \n" +
+                                    $"Your bash roll was {bashRoll} and you needed 16! \n");
+                                theLock.Locked = false;
+                                theLock.Attempted = true;
+                                return true;
+                            }
+                            messageHandler.WriteRead($"Ouch! The lock doesnt budge! \n" +
+                                $"Your bash roll was {bashRoll} and you needed 16! \n");
+                            theLock.Attempted = true;
+                            break;
+
+                        default:
+                            return false;
+                    }
+                }
+                else
+                {
+                    if (character.Inventory.FirstOrDefault(x => x.Name == ItemType.Key && x.ObjectiveNumber == theLock.KeyNumber) != null)
+                    {
+                        messageHandler.WriteRead("You've tried bashing or picking to no avail BUT you have the right key!  Unlocked! \n");
+                        theLock.Locked = false;
+                        return true;
+                    }
+                    else
+                    {
+                        messageHandler.WriteRead("You cannot try to bash or pick this lock again and you do not currently have a key! \n");
+                        return false;
+                    }
+                }
+            }
             return false;
         }
     }
