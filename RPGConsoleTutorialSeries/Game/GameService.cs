@@ -7,6 +7,7 @@ using RPGConsoleTutorialSeries.Adventures.Models;
 using RPGConsoleTutorialSeries.Entities.Interfaces;
 using RPGConsoleTutorialSeries.Entities.Models;
 using RPGConsoleTutorialSeries.Game.Interfaces;
+using RPGConsoleTutorialSeries.Items.Models;
 using RPGConsoleTutorialSeries.Utilities.Interfaces;
 
 namespace RPGConsoleTutorialSeries.Game
@@ -19,6 +20,8 @@ namespace RPGConsoleTutorialSeries.Game
 
         private Character character;
         private Adventure gameAdventure;
+        private bool gameWon = false;
+        private string gameWinningDescription;
 
         public GameService(IAdventureService AdventureService, ICharacterService CharacterService, IMessageHandler MessageHandler)
         {
@@ -39,7 +42,7 @@ namespace RPGConsoleTutorialSeries.Game
 
             CreateDescriptionBanner(gameAdventure);
 
-            var charactersInRange = characterService.GetCharactersInRange(gameAdventure.MinimumLevel, gameAdventure.MaxLevel);
+            var charactersInRange = characterService.GetCharactersInRange(gameAdventure.GUID, gameAdventure.MinimumLevel, gameAdventure.MaxLevel);
 
             if (charactersInRange.Count == 0)
             {
@@ -158,6 +161,12 @@ namespace RPGConsoleTutorialSeries.Game
                         if (room.Chest != null)
                         {
                             OpenChest(room.Chest);
+                            if (gameWon)
+                            {
+                                GameOver();
+                            }
+                            WriteRoomOptions(room);
+                            playerDecision = messageHandler.Read().ToLower();
                         }
                         else
                         {
@@ -241,7 +250,7 @@ namespace RPGConsoleTutorialSeries.Game
 
                 if (disarmTrapRoll < 11)
                 {
-                    ProcessTrapMessagesAndDamage(room);
+                    ProcessTrapMessagesAndDamage(room.Trap);
                 }
                 else
                 {
@@ -254,31 +263,110 @@ namespace RPGConsoleTutorialSeries.Game
             return;
         }
 
-        private void ProcessTrapMessagesAndDamage(Room room)
+        private void ProcessTrapMessagesAndDamage(Trap trap)
         {
             var dice = new Dice();
 
-            messageHandler.Write($"CLANK!  A sound of metal falls into place... you TRIPPED a {room.Trap.TrapType.ToString()} trap!");
-            var trapDamage = dice.RollDice(new List<Die>() { room.Trap.DamageDie });
-            var hitPoints = character.Hitpoints - trapDamage;
+            messageHandler.Write($"CLANK! A sound of metal falls into place... you TRIPPED a {trap.TrapType} trap!");
+            var trapDamage = dice.RollDice(new List<Die>() { trap.DamageDie });
+            character.Hitpoints -= trapDamage;
+            var hitPoints = character.Hitpoints;
             messageHandler.Write($"YOU WERE DAMAGED FOR {trapDamage} HIT POINTS!  You now have {hitPoints} hit pointss!");
             if (hitPoints < 1)
             {
                 messageHandler.Write("AND......you're dead.");
+                character.CauseOfDeath = $"Killed by a {trap.TrapType}... it was ugly.";
+                character.DiedInAdventure = gameAdventure.Title;
+                character.IsAlive = false;
+                GameOver();
             }
+            messageHandler.Read();
         }
 
         private void OpenChest(Chest chest)
         {
-            throw new NotImplementedException();
+            if (chest.Lock == null || !chest.Lock.Locked)
+            {
+                if (chest.Trap != null && !chest.Trap.TrippedOrDisarmed)
+                {
+                    ProcessTrapMessagesAndDamage(chest.Trap);
+                    chest.Trap.TrippedOrDisarmed = true;
+                }
+                else
+                {
+                    messageHandler.Write("You open the chest..");
+                    if (chest.Gold > 0)
+                    {
+                        character.Gold += chest.Gold;
+                        messageHandler.Write($"Woot! You find {chest.Gold} gold! Your total gold is now {character.Gold}\n");
+                        chest.Gold = 0;
+                    }
+
+                    if (chest.Treasure != null && chest.Treasure.Count > 0)
+                    {
+                        messageHandler.Write($"You find {chest.Treasure.Count} items in this chest!  And they are:");
+
+                        foreach (var item in chest.Treasure)
+                        {
+                            messageHandler.Write(item.Name.ToString());
+
+                            if (item.ObjectiveNumber == gameAdventure.FinalObjective)
+                            {
+                                gameWon = true;
+                                gameWinningDescription = item.Description;
+                                character.Gold += gameAdventure.CompletionGoldReward;
+                                character.XP += gameAdventure.CompletionXPReward;
+                                character.AdventuresPlayed.Add(gameAdventure.GUID);
+                            }
+                        }
+                        messageHandler.Write("\n");
+
+                        character.Inventory.AddRange(chest.Treasure);
+                        chest.Treasure = new List<Item>();
+
+                        if (gameWon)
+                        {
+                            Console.BackgroundColor = ConsoleColor.DarkBlue;
+                            Console.ForegroundColor = ConsoleColor.White;
+                            messageHandler.Write("***************************************************");
+                            messageHandler.Write("*  ~~~YOU FOUND THE FINAL OBJECTIVE!  YOU WIN!~~~ *");
+                            messageHandler.Write("***************************************************");
+
+                            Console.BackgroundColor = ConsoleColor.Red;
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            messageHandler.Write("YOU FOUND : " + gameWinningDescription);
+                            messageHandler.Write("XP Reward = " + gameAdventure.CompletionXPReward);
+                            messageHandler.Write("Gold Reward = " + gameAdventure.CompletionGoldReward);
+                            messageHandler.Write(character.Name + " now has " + character.XP + " XP and " + character.Gold + " gold.");
+                        }
+                        return;
+                    }
+
+                    if (chest.Gold == 0 && (chest.Treasure == null || chest.Treasure.Count == 0))
+                    {
+                        messageHandler.Write("The chest is empty... \n");
+                    }
+                }
+            }
+            else
+            {
+                if (TryUnlock(chest.Lock))
+                {
+                    OpenChest(chest);
+                    if (gameWon)
+                    {
+                        GameOver();
+                    }
+                }
+            }
         }
 
         private void ExitRoom(Room room, CompassDirection wallLocation)
         {
             if (room.Trap != null && room.Trap.TrippedOrDisarmed == false)
             {
-                ProcessTrapMessagesAndDamage(room);
-                //IF NOT DEAD - keep going.
+                ProcessTrapMessagesAndDamage(room.Trap);
+                room.Trap.TrippedOrDisarmed = true;
             }
 
             var exit = room.Exits.FirstOrDefault(x => x.WallLocation == wallLocation);
@@ -295,7 +383,120 @@ namespace RPGConsoleTutorialSeries.Game
                 throw new Exception("The room that this previous room was supposed to lead too does not exist!?  Dragons?  Or maybe a bad author!!!");
             }
 
-            RoomProcessor(newRoom);
+            if ((exit.Lock == null || !exit.Lock.Locked) || TryUnlock(exit.Lock))
+            {
+                RoomProcessor(newRoom);
+            }
+            else
+            {
+                RoomProcessor(room);
+            }
+        }
+
+        private bool TryUnlock(Lock theLock)
+        {
+            if (!theLock.Locked) return true;
+
+            var hasOptions = true;
+            var dice = new Dice();
+
+            while (hasOptions)
+            {
+                if (!theLock.Attempted)
+                {
+                    messageHandler.Write("Locked!  Would you like to attempt to unlock it? \n" +
+                        "K)ey L)ockpick B)ash or W)alk away");
+                    var playerDecision = messageHandler.Read().ToLower();
+                    switch (playerDecision)
+                    {
+                        case "k":
+                            if (character.Inventory.FirstOrDefault(x => x.Name == ItemType.Key && x.ObjectiveNumber == theLock.KeyNumber) != null)
+                            {
+                                messageHandler.WriteRead("You have the right key!  It unlocks the lock! \n");
+                                theLock.Locked = false;
+                                return true;
+                            }
+                            else
+                            {
+                                messageHandler.Write("You do not have a key for this chest \n");
+                                break;
+                            }
+                        case "l":
+                            if (character.Inventory.FirstOrDefault(x => x.Name == ItemType.Lockpicks) == null)
+                            {
+                                messageHandler.Write("You don't have lockpicks! \n");
+                                break;
+                            }
+                            else
+                            {
+                                var lockpickBonus = 0 + character.Abilities.Dexterity;
+                                if (character.Class == CharacterClass.Thief)
+                                {
+                                    lockpickBonus += 2;
+                                }
+                                var pickRoll = (dice.RollDice(new List<Die> { Die.D20 }) + lockpickBonus);
+                                if (pickRoll > 12)
+                                {
+                                    messageHandler.WriteRead($"Youe dextrous hands click that lock open! \n" +
+                                    $"Your lockpick roll was {pickRoll} and you needed 12! \n");
+                                    theLock.Locked = false;
+                                    theLock.Attempted = true;
+                                    return true;
+                                }
+                                messageHandler.WriteRead($"Snap! The lock doesnt budge! \n" +
+                                $"Your lockpick roll was {pickRoll} and you needed 12! \n");
+                                theLock.Attempted = true;
+                                break;
+                            }
+                        case "b":
+                            var bashBonus = 0 + character.Abilities.Strength;
+                            if (character.Class == CharacterClass.Fighter)
+                            {
+                                bashBonus += 2;
+                            }
+                            var bashRoll = (dice.RollDice(new List<Die> { Die.D20 }) + bashBonus);
+                            if (bashRoll > 16)
+                            {
+                                messageHandler.WriteRead($"You muster your strength and BASH that silly lock into submission! \n" +
+                                    $"Your bash roll was {bashRoll} and you needed 16! \n");
+                                theLock.Locked = false;
+                                theLock.Attempted = true;
+                                return true;
+                            }
+                            messageHandler.WriteRead($"Ouch! The lock doesnt budge! \n" +
+                                $"Your bash roll was {bashRoll} and you needed 16! \n");
+                            theLock.Attempted = true;
+                            break;
+
+                        default:
+                            return false;
+                    }
+                }
+                else
+                {
+                    if (character.Inventory.FirstOrDefault(x => x.Name == ItemType.Key && x.ObjectiveNumber == theLock.KeyNumber) != null)
+                    {
+                        messageHandler.WriteRead("You've tried bashing or picking to no avail BUT you have the right key!  Unlocked! \n");
+                        theLock.Locked = false;
+                        return true;
+                    }
+                    else
+                    {
+                        messageHandler.WriteRead("You cannot try to bash or pick this lock again and you do not currently have a key! \n");
+                        return false;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private void GameOver()
+        {
+            characterService.SaveCharacter(character);
+            character = new Character();
+            messageHandler.WriteRead("THY GAME IS OVER SON/MADAM ... PRESSETH ENTER TO RETURNETH TO THINE MAIN MENU");
+            messageHandler.Clear();
+            Program.MakeMainMenu();
         }
     }
 }

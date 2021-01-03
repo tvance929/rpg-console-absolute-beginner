@@ -1,17 +1,1 @@
-{
-  "Name": "Conan",
-  "Level": 1,
-  "Gold": 2,
-  "HitPoints": 4,
-  "Class": 1,
-  "IsAlive": true,
-  "Abilities": 
-  {
-    "Strength" : 1,
-    "Dexterity": 1,
-    "Constitution": 0,
-    "Intelligence": -1,
-    "Wisdom" : -1,
-    "Charisma" : 1
-  }
-}
+{"Name":"Conan","Abilities":{"Strength":1,"Dexterity":1,"Constitution":0,"Intelligence":-1,"Wisdom":-1,"Charisma":1},"XP":0,"Background":null,"InventoryWeight":0,"AdventuresPlayed":[],"Class":1,"CauseOfDeath":"Killed by a Poison... it was ugly.","DiedInAdventure":"The Duke's Chalice.","Hitpoints":0,"Attack":null,"Gold":2,"Level":1,"IsAlive":false,"ArmorClass":0,"Inventory":[{"Name":6,"Description":"ugly brown key","ObjectiveNumber":2,"Weight":0,"GoldValue":0}]}

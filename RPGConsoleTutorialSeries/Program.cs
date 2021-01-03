@@ -39,7 +39,7 @@ namespace RPGConsoleTutorialSeries
             Console.WriteLine("***************************************************\n\n");
         }
 
-        private static void MakeMainMenu(SoundPlayer player)
+        public static void MakeMainMenu(SoundPlayer player = null)
         {
             MakeMenuOptions();
             var inputValid = false;
@@ -50,7 +50,7 @@ namespace RPGConsoleTutorialSeries
                     switch (Console.ReadLine().ToUpper())
                     {
                         case "S":
-                            player.Stop();
+                            if (player != null) player.Stop();
                             gameService.StartGame();
                             inputValid = true;
                             break;

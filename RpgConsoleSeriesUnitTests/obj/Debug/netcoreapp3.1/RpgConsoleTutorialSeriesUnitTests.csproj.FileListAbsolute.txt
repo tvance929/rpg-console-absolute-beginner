@@ -101,3 +101,10 @@ C:\Users\tvance\source\repos\RPG-LearnCSharp\RpgConsoleSeriesUnitTests\bin\Debug
 C:\Users\tvance\source\repos\RPG-LearnCSharp\RpgConsoleSeriesUnitTests\obj\Debug\netcoreapp3.1\RpgConsoleTutorialSeriesUnitTests.csproj.CoreCompileInputs.cache
 C:\Users\tvance\source\repos\RPG-LearnCSharp\RpgConsoleSeriesUnitTests\obj\Debug\netcoreapp3.1\RpgConsoleTutorialSeriesUnitTests.dll
 C:\Users\tvance\source\repos\RPG-LearnCSharp\RpgConsoleSeriesUnitTests\obj\Debug\netcoreapp3.1\RpgConsoleTutorialSeriesUnitTests.pdb
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RpgConsoleSeriesUnitTests\bin\Debug\netcoreapp3.1\Microsoft.Win32.SystemEvents.dll
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RpgConsoleSeriesUnitTests\bin\Debug\netcoreapp3.1\System.Drawing.Common.dll
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RpgConsoleSeriesUnitTests\bin\Debug\netcoreapp3.1\System.Windows.Extensions.dll
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RpgConsoleSeriesUnitTests\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RpgConsoleSeriesUnitTests\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RpgConsoleSeriesUnitTests\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
+C:\Users\tvance\source\repos\RPG-LearnCSharp\RpgConsoleSeriesUnitTests\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll

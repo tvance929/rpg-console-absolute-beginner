@@ -32,7 +32,7 @@ namespace RPGConsoleTutorialSeries.Entities
             return character;
         }
 
-        public List<Character> GetCharactersInRange(int minLevel = 0, int maxLevel = 20)
+        public List<Character> GetCharactersInRange(Guid adventureGUID, int minLevel = 0, int maxLevel = 20)
         {
             var basePath = $"{AppDomain.CurrentDomain.BaseDirectory}characters";
             var charactersInRange = new List<Character>();
@@ -45,7 +45,9 @@ namespace RPGConsoleTutorialSeries.Entities
                     using (StreamReader fi = File.OpenText(file.FullName))
                     {
                         var potentialCharacterInRange = JsonConvert.DeserializeObject<Character>(fi.ReadToEnd());
-                        if (potentialCharacterInRange.IsAlive && (potentialCharacterInRange.Level >= minLevel && potentialCharacterInRange.Level <= maxLevel))
+                        if (potentialCharacterInRange.IsAlive && 
+                            (potentialCharacterInRange.Level >= minLevel && potentialCharacterInRange.Level <= maxLevel) &&
+                            !potentialCharacterInRange.AdventuresPlayed.Contains(adventureGUID))
                         {
                             charactersInRange.Add(potentialCharacterInRange);
                         }
@@ -55,10 +57,25 @@ namespace RPGConsoleTutorialSeries.Entities
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"OH NOZE!  Goblins!!! {ex.Message}");
+                Console.WriteLine($"OH NOZE! Goblins!!! {ex.Message}");
             }
 
-            return charactersInRange;            
+            return charactersInRange;
+        }
+
+        public bool SaveCharacter(Character character)
+        {
+            var basePath = $"{AppDomain.CurrentDomain.BaseDirectory}characters";
+
+            if (File.Exists($"{basePath}\\{character.Name}.json"))
+            {
+                File.WriteAllText($"{basePath}\\{character.Name}.json", JsonConvert.SerializeObject(character));
+                return true;
+            }
+            else
+            {
+                throw new Exception("Character not found.");
+            }
         }
     }
 }

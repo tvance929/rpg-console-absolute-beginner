@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using RPGConsoleTutorialSeries.Items.Interfaces;
 
 namespace RPGConsoleTutorialSeries.Entities.Models
@@ -6,16 +7,14 @@ namespace RPGConsoleTutorialSeries.Entities.Models
     public class Character : Entity
     {
         public string Name;
-        public int Level;
         public Abilities Abilities;
-        public int Gold;
+        public int XP;
         public string Background;
         public int InventoryWeight;
-        public List<string> AdventuresPlayed;
-        public bool IsAlive;
-        public int ArmorClass;
-        public List<IItem> Inventory;
+        public List<Guid> AdventuresPlayed;    
         public CharacterClass Class;
+        public string CauseOfDeath;
+        public string DiedInAdventure;
     }
 
     public class Abilities
