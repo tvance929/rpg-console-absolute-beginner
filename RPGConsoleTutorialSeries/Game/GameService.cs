@@ -47,7 +47,20 @@ namespace RPGConsoleTutorialSeries.Game
             if (charactersInRange.Count == 0)
             {
                 messageHandler.Write("Sorry, you do not have any characters in the range level of the adventure you are trying to play.");
-                return false;
+                messageHandler.Write("Would you like to:");
+                messageHandler.Write("C)reate a new character");
+                messageHandler.Write("R)eturn to the Main Menu?");
+                var playerDecision = messageHandler.Read().ToLower();
+                if (playerDecision == "r")
+                {
+                    messageHandler.Clear();
+                    Program.MakeMainMenu();
+                }
+                else if (playerDecision == "c")
+                {
+                    messageHandler.Clear();
+                    characterService.CreateCharacter();
+                }
             }
             else
             {

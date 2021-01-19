@@ -8,8 +8,8 @@ namespace RPGConsoleTutorialSeries.Entities.Models
         public int Hitpoints = 0;
         public Attack Attack;
         public int Gold;
-        public int Level;
-        public bool IsAlive;
+        public int Level = 1;
+        public bool IsAlive = true;
         public int ArmorClass;
         public List<Item> Inventory;
     }

@@ -7,11 +7,11 @@ namespace RPGConsoleTutorialSeries.Entities.Models
     public class Character : Entity
     {
         public string Name;
-        public Abilities Abilities;
-        public int XP;
+        public Abilities Abilities = new Abilities();
+        public int XP = 0;
         public string Background;
         public int InventoryWeight;
-        public List<Guid> AdventuresPlayed;    
+        public List<Guid> AdventuresPlayed = new List<Guid>();    
         public CharacterClass Class;
         public string CauseOfDeath;
         public string DiedInAdventure;
@@ -21,10 +21,8 @@ namespace RPGConsoleTutorialSeries.Entities.Models
     {
         public int Strength;
         public int Dexterity;
-        public int Constitution;
         public int Intelligence;
-        public int Wisdom;
-        public int Charisma;        
+        public int Wisdom;    
     }
 
     public enum CharacterClass
