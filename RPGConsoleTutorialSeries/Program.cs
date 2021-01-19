@@ -10,8 +10,8 @@ namespace RPGConsoleTutorialSeries
     class Program
     {
         private static readonly AdventureService adventureService = new AdventureService();
-        private static readonly CharacterService characterService = new CharacterService();
         private static readonly ConsoleMessageHandler consoleMessageHandler = new ConsoleMessageHandler();
+        private static readonly CharacterService characterService = new CharacterService(consoleMessageHandler);
         private static GameService gameService = new GameService(adventureService, characterService, consoleMessageHandler);
 
         static void Main(string[] args)
@@ -55,7 +55,7 @@ namespace RPGConsoleTutorialSeries
                             inputValid = true;
                             break;
                         case "C":
-                            CreateCharacter();
+                            characterService.CreateCharacter();
                             inputValid = true;
                             break;
                         case "L":
@@ -86,11 +86,6 @@ namespace RPGConsoleTutorialSeries
         private static void LoadGame()
         {
             Console.WriteLine("Load a game, great job!");
-        }
-
-        private static void CreateCharacter()
-        {
-            Console.WriteLine("You are creating a character, good job!");
         }
     }
 }

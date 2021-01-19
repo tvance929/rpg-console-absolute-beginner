@@ -11,5 +11,7 @@ namespace RPGConsoleTutorialSeries.Entities.Interfaces
         public bool SaveCharacter(Character character);
 
         public List<Character> GetCharactersInRange(Guid adventureGUID, int minLevel = 0, int maxLevel = 20);
+
+        public void CreateCharacter();
     }
 }

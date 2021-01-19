@@ -41,7 +41,7 @@ namespace RpgConsoleSeriesUnitTests
         {
             //Arrange
             mockAdventureService.Setup(_ => _.GetInitialAdventure()).Returns(new Adventure { Title = "testTitle", Description = "test description" });
-            mockCharacterService.Setup(_ => _.GetCharactersInRange(It.IsAny<int>(), It.IsAny<int>())).Returns(new List<Character>());
+            mockCharacterService.Setup(_ => _.GetCharactersInRange(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new List<Character>());
 
             //Act
             var methodReturn = gameService.StartGame();
@@ -61,7 +61,7 @@ namespace RpgConsoleSeriesUnitTests
             };
 
             mockAdventureService.Setup(_ => _.GetInitialAdventure()).Returns(new Adventure { Title = "testTitle", Description = "test description", Rooms = new List<Room> { new Room() } });
-            mockCharacterService.Setup(_ => _.GetCharactersInRange(It.IsAny<int>(), It.IsAny<int>())).Returns(characterList);
+            mockCharacterService.Setup(_ => _.GetCharactersInRange(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(characterList);
             mockMessageHandler.Setup(_ => _.Read()).Returns("0");
 
             //Act
@@ -82,7 +82,7 @@ namespace RpgConsoleSeriesUnitTests
             };
 
             mockAdventureService.Setup(_ => _.GetInitialAdventure()).Returns(new Adventure { Title = "testTitle", Description = "test description" });
-            mockCharacterService.Setup(_ => _.GetCharactersInRange(It.IsAny<int>(), It.IsAny<int>())).Returns(characterList);
+            mockCharacterService.Setup(_ => _.GetCharactersInRange(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(characterList);
             mockMessageHandler.Setup(_ => _.Read()).Returns("z");
 
             //Act //Assert
