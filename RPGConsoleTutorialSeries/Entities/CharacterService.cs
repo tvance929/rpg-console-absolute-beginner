@@ -6,6 +6,7 @@ using RPGConsoleTutorialSeries.Entities.Interfaces;
 using RPGConsoleTutorialSeries.Entities.Models;
 using RPGConsoleTutorialSeries.Utilities;
 using RPGConsoleTutorialSeries.Utilities.Interfaces;
+using RPGConsoleTutorialSeries.Items.Models;
 
 namespace RPGConsoleTutorialSeries.Entities
 {
@@ -88,6 +89,7 @@ namespace RPGConsoleTutorialSeries.Entities
             messageHandler.Write("***********************************\n\n");
 
             var newCharacter = new Character();
+            newCharacter.Inventory = new List<Item>();
 
             messageHandler.Write("Adventurers Name Please : ", true);
             newCharacter.Name = messageHandler.Read();
@@ -99,21 +101,25 @@ namespace RPGConsoleTutorialSeries.Entities
                     newCharacter.Class = CharacterClass.Fighter;
                     newCharacter.Hitpoints = 8;
                     newCharacter.Abilities.Strength = 1;
+                    newCharacter.Attack = new Attack { BaseDie = 8, BonusDamage = 0 };
                     break;
                 case "t":
                     newCharacter.Class = CharacterClass.Thief;
                     newCharacter.Hitpoints = 4;
                     newCharacter.Abilities.Dexterity = 1;
+                    newCharacter.Attack = new Attack { BaseDie = 4, BonusDamage = 0 };
                     break;
                 case "m":
                     newCharacter.Class = CharacterClass.MagicUser;
                     newCharacter.Hitpoints = 4;
                     newCharacter.Abilities.Intelligence = 1;
+                    newCharacter.Attack = new Attack { BaseDie = 4, BonusDamage = 0 };
                     break;
                 case "h":
                     newCharacter.Class = CharacterClass.Healer;
                     newCharacter.Hitpoints = 6;
                     newCharacter.Abilities.Wisdom = 1;
+                    newCharacter.Attack = new Attack { BaseDie = 6, BonusDamage = 0 };
                     break;
             }
 
