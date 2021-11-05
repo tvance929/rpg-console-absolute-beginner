@@ -12,7 +12,8 @@ namespace RPGConsoleTutorialSeries
         private static readonly AdventureService adventureService = new AdventureService();
         private static readonly ConsoleMessageHandler consoleMessageHandler = new ConsoleMessageHandler();
         private static readonly CharacterService characterService = new CharacterService(consoleMessageHandler);
-        private static GameService gameService = new GameService(adventureService, characterService, consoleMessageHandler);
+        private static readonly CombatService combatService = new CombatService(consoleMessageHandler);
+        private static GameService gameService = new GameService(adventureService, characterService, consoleMessageHandler, combatService);
 
         static void Main(string[] args)
         {
@@ -81,6 +82,7 @@ namespace RPGConsoleTutorialSeries
             Console.WriteLine("(S)tart a new game");
             Console.WriteLine("(L)oad a game");
             Console.WriteLine("(C)reate new character");
+            Console.WriteLine("(G)raveyard");
         }
 
         private static void LoadGame()

@@ -17,17 +17,19 @@ namespace RPGConsoleTutorialSeries.Game
         private readonly IAdventureService adventureService;
         private readonly ICharacterService characterService;
         private readonly IMessageHandler messageHandler;
+        private readonly ICombatService combatService;
 
         private Character character;
         private Adventure gameAdventure;
         private bool gameWon = false;
         private string gameWinningDescription;
 
-        public GameService(IAdventureService AdventureService, ICharacterService CharacterService, IMessageHandler MessageHandler)
+        public GameService(IAdventureService AdventureService, ICharacterService CharacterService, IMessageHandler MessageHandler, ICombatService CombatService)
         {
             adventureService = AdventureService;
             characterService = CharacterService;
             messageHandler = MessageHandler;
+            combatService = CombatService;
         }
 
         public bool StartGame(Adventure adventure = null)
@@ -122,7 +124,10 @@ namespace RPGConsoleTutorialSeries.Game
         private void RoomProcessor(Room room)
         {
             RoomDescription(room);
-            RoomOptions(room);
+            if (character.IsAlive)
+            {
+                RoomOptions(room);
+            }
         }
 
         private void RoomDescription(Room room)
@@ -144,12 +149,28 @@ namespace RPGConsoleTutorialSeries.Game
                     exitDescription += $"{exit.WallLocation},";
                 }
 
-                messageHandler.Write($"This room has exits on the {exitDescription.Remove(exitDescription.Length - 1)} walls.");
+                messageHandler.Write($"This room has exits on the {exitDescription.Remove(exitDescription.Length - 1)} walls.", true);
             }
 
             if (room.Chest != null)
             {
-                messageHandler.Write($"There is a chest in the room!");
+                messageHandler.Write($"There is a chest in the room!", true);
+            }
+
+            if (room.Monsters != null)
+            {
+                messageHandler.Write($"\nOH SNAP THERE'S MONSTERS IN HERE!!!", true);
+                combatService.RunCombat(ref character, room.Monsters);
+
+                if (!character.IsAlive)
+                {
+                    character.DiedInAdventure = $"{gameAdventure.Title} - [{gameAdventure.GUID}]";
+                    GameOver();                
+                }
+                else
+                {
+                    room.Monsters = null;
+                }
             }
         }
 
@@ -177,6 +198,7 @@ namespace RPGConsoleTutorialSeries.Game
                             if (gameWon)
                             {
                                 GameOver();
+                                break;
                             }
                             WriteRoomOptions(room);
                             playerDecision = messageHandler.Read().ToLower();
@@ -335,6 +357,7 @@ namespace RPGConsoleTutorialSeries.Game
                         messageHandler.Write("\n");
 
                         character.Inventory.AddRange(chest.Treasure);
+                        
                         chest.Treasure = new List<Item>();
 
                         if (gameWon)
@@ -450,7 +473,7 @@ namespace RPGConsoleTutorialSeries.Game
                                 var pickRoll = (dice.RollDice(new List<Die> { Die.D20 }) + lockpickBonus);
                                 if (pickRoll > 12)
                                 {
-                                    messageHandler.WriteRead($"Youe dextrous hands click that lock open! \n" +
+                                    messageHandler.WriteRead($"Your dextrous hands click that lock open! \n" +
                                     $"Your lockpick roll was {pickRoll} and you needed 12! \n");
                                     theLock.Locked = false;
                                     theLock.Attempted = true;
@@ -506,8 +529,9 @@ namespace RPGConsoleTutorialSeries.Game
         private void GameOver()
         {
             characterService.SaveCharacter(character);
-            character = new Character();
-            messageHandler.WriteRead("THY GAME IS OVER SON/MADAM ... PRESSETH ENTER TO RETURNETH TO THINE MAIN MENU");
+           // character = new Character();
+            messageHandler.WriteRead("THY GAME IS OVER  ... PRESSETH ENTER TO RETURNETH TO THINE MAIN MENU");
+            
             messageHandler.Clear();
             Program.MakeMainMenu();
         }

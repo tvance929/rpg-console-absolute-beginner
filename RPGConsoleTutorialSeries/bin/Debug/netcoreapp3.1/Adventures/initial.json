@@ -4,6 +4,7 @@
   "Description": "You've made it!  Your first adventure...searching for the Duke's cup in a rundown monster infested ruin...YES!  \n You cannot believe you're really an adventurer now.  But will you survive?  As you survey this initial plain entryway you see...",
   "CompletionXPReward": 250,
   "CompletionGoldReward": 100,
+  "FinalObjective": 123,
   "MaxLevel": 1,
   "MinimumLevel": 1,
   "Rooms": [
@@ -85,6 +86,25 @@
           },
           "WallLocation": 1,
           "LeadsToRoomNumber": 4
+        }
+      ],
+      "Monsters": [
+        {
+          "MonsterType": "Rat",
+          "HitPoints": 2,
+          "Attack": {
+            "BaseDie": 4,
+            "BonusDamage": 0
+          },
+          "Gold": 1,
+          "ArmorClass": 9,
+          "Inventory": [
+            {
+              "Name": 5,
+              "Description": "Used tinderbox",
+              "Weight": 1
+            }
+          ]
         }
       ]
     },

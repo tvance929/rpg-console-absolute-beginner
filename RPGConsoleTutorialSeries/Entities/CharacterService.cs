@@ -88,8 +88,10 @@ namespace RPGConsoleTutorialSeries.Entities
             messageHandler.Write("*     CHARACTER CREATION          *");
             messageHandler.Write("***********************************\n\n");
 
-            var newCharacter = new Character();
-            newCharacter.Inventory = new List<Item>();
+            var newCharacter = new Character
+            {
+                Inventory = new List<Item>()
+            };
 
             messageHandler.Write("Adventurers Name Please : ", true);
             newCharacter.Name = messageHandler.Read();
@@ -100,24 +102,28 @@ namespace RPGConsoleTutorialSeries.Entities
                 case "f":
                     newCharacter.Class = CharacterClass.Fighter;
                     newCharacter.Hitpoints = 8;
+                    newCharacter.ArmorClass = 12;
                     newCharacter.Abilities.Strength = 1;
                     newCharacter.Attack = new Attack { BaseDie = 8, BonusDamage = 0 };
                     break;
                 case "t":
                     newCharacter.Class = CharacterClass.Thief;
                     newCharacter.Hitpoints = 4;
+                    newCharacter.ArmorClass = 8;
                     newCharacter.Abilities.Dexterity = 1;
                     newCharacter.Attack = new Attack { BaseDie = 4, BonusDamage = 0 };
                     break;
                 case "m":
                     newCharacter.Class = CharacterClass.MagicUser;
                     newCharacter.Hitpoints = 4;
+                    newCharacter.ArmorClass = 8;
                     newCharacter.Abilities.Intelligence = 1;
                     newCharacter.Attack = new Attack { BaseDie = 4, BonusDamage = 0 };
                     break;
                 case "h":
                     newCharacter.Class = CharacterClass.Healer;
                     newCharacter.Hitpoints = 6;
+                    newCharacter.ArmorClass = 10;
                     newCharacter.Abilities.Wisdom = 1;
                     newCharacter.Attack = new Attack { BaseDie = 6, BonusDamage = 0 };
                     break;
